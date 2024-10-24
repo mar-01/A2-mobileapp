@@ -24,6 +24,7 @@ class MainActivity : ComponentActivity() {
                     Toast.makeText(this, "Daten erfolgreich gespeichert", Toast.LENGTH_SHORT).show()
                 } else {
                     Toast.makeText(this, "Fehler: ${task.exception?.message}", Toast.LENGTH_LONG).show()
+
                 }
             }
         }
