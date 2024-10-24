@@ -1,46 +1,31 @@
 package com.example.a2_mobileapp
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.a2_mobileapp.ui.theme.A2mobileappTheme
+import com.example.a2_mobileapp.databinding.ActivityMainBinding
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 
 class MainActivity : ComponentActivity() {
+
+    lateinit var binding : ActivityMainBinding
+    private lateinit var  firebaseRef : DatabaseReference
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent {
-            A2mobileappTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    Greeting("Android")
+
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        firebaseRef = FirebaseDatabase.getInstance("https://a2-mobileapp-default-rtdb.europe-west1.firebasedatabase.app").getReference("test")
+        binding.button.setOnClickListener {
+            firebaseRef.setValue("test").addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    Toast.makeText(this, "Daten erfolgreich gespeichert", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(this, "Fehler: ${task.exception?.message}", Toast.LENGTH_LONG).show()
                 }
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    A2mobileappTheme {
-        Greeting("Android")
     }
 }
