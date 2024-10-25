@@ -20,9 +20,7 @@ class MainActivity : ComponentActivity() {
 
         firebaseRef = FirebaseDatabase.getInstance("https://a2-mobileapp-default-rtdb.europe-west1.firebasedatabase.app").getReference("Kontakte")
         binding.btnSenddata.setOnClickListener {
-            firebaseRef.setValue("test").addOnCompleteListener { task ->
-                senddata()
-            }
+            senddata()
         }
     }
 
@@ -40,6 +38,5 @@ class MainActivity : ComponentActivity() {
             .addOnCompleteListener {
                 Toast.makeText(this, "Daten hochgeladen", Toast.LENGTH_SHORT).show()
             }
-
     }
 }
