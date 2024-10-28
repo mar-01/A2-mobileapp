@@ -1,5 +1,6 @@
 package com.example.a2_mobileapp
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -18,13 +19,16 @@ class MainActivity : ComponentActivity() {
     private lateinit var  firebaseRefuser : DatabaseReference
     val auth = FirebaseAuth.getInstance()
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         mainbinding = ActivityMainBinding.inflate(layoutInflater)
         loginbinding = ActivityLoginBinding.inflate(layoutInflater)
-        setContentView(loginbinding.root) //Login UI anzeigen
+        if(auth.currentUser != null) {
+            setContentView(mainbinding.root) //Main UI anzeigen wenn User eingeloggt
+        } else {
+            setContentView(loginbinding.root) //Login UI anzeigen wenn noch kein User eingeloggt
+        }
 
         firebaseRefuser = FirebaseDatabase.getInstance("https://a2-mobileapp-default-rtdb.europe-west1.firebasedatabase.app").getReference("User")
         loginbinding.btnRegistration.setOnClickListener {
@@ -43,7 +47,34 @@ class MainActivity : ComponentActivity() {
 
     //User anmelden
     private fun signIn(){
+        val  username = loginbinding.textUsername.text.toString() //Eingabefeld auslesen
+        val  password = loginbinding.textPassword.text.toString() //Eingabefeld auslesen
 
+        //Eingabefelder prüfen ob sie ausgefüllt sind
+        if(username.isEmpty()) {
+            loginbinding.textUsername.error = "Username angeben"
+            if(password.isEmpty()) loginbinding.textPassword.error = "Passwort angeben"
+            Toast.makeText(this, "Fehler bei der Anmeldung", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        if(password.isEmpty()) {
+            loginbinding.textPassword.error = "Passwort angeben"
+            Toast.makeText(this, "Fehler bei der Anmeldung", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val email = "$username@example.com"
+        auth.signInWithEmailAndPassword(email, password)
+            .addOnCompleteListener { task ->
+                if(task.isSuccessful) {
+                    Toast.makeText(this, "Anmeldung erfolgreich!", Toast.LENGTH_SHORT).show()
+                    startActivity(Intent(this, MainActivity::class.java)) //Main UI aufrufen
+                    finish() //aktuelle Activity beenden
+                } else {
+                    Toast.makeText(this, "Anmeldung fehlgeschlagen!", Toast.LENGTH_SHORT).show()
+                }
+            }
     }
 
     //User registrieren
@@ -73,12 +104,12 @@ class MainActivity : ComponentActivity() {
 
                     if(uid != null) {
                         firebaseRefuser.child(uid).setValue(usermap)
+                        Toast.makeText(this, "Registrierung erfolgreich!", Toast.LENGTH_SHORT).show()
                     }
                 } else {
                     Toast.makeText(this, "Registrierung fehlgeschlagen", Toast.LENGTH_SHORT).show()
                 }
             }
-
     }
 
     //Kontakte an die Datenbank schicken
