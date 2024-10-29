@@ -2,6 +2,7 @@ package com.example.a2_mobileapp
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import com.example.a2_mobileapp.databinding.ActivityLoginBinding
@@ -10,6 +11,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 
+var useruid = ""
 
 class MainActivity : ComponentActivity() {
 
@@ -17,7 +19,9 @@ class MainActivity : ComponentActivity() {
     lateinit var loginbinding : ActivityLoginBinding //Login UI
     private lateinit var  firebaseRefknt : DatabaseReference
     private lateinit var  firebaseRefuser : DatabaseReference
+    private lateinit var authStateListener: FirebaseAuth.AuthStateListener
     val auth = FirebaseAuth.getInstance()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,17 +40,24 @@ class MainActivity : ComponentActivity() {
         }
 
         loginbinding.btnLogin.setOnClickListener {
-            signIn()
+            signIn() { uid ->
+                if(uid != null) {
+                    useruid = uid
+                    Log.d("Authstatus", "Anmeldung erfolgt, UID: $useruid")
+                } else {
+                    Log.d("Authstatus", "Anmeldung fehlgeschlagen")
+                }
+            }
         }
 
         firebaseRefknt = FirebaseDatabase.getInstance("https://a2-mobileapp-default-rtdb.europe-west1.firebasedatabase.app").getReference("Kontakte")
         mainbinding.btnSenddata.setOnClickListener {
-            senddata()
+            senddata(useruid)
         }
     }
 
     //User anmelden
-    private fun signIn(){
+    private fun signIn(callback: (String?) -> Unit){
         val  username = loginbinding.textUsername.text.toString() //Eingabefeld auslesen
         val  password = loginbinding.textPassword.text.toString() //Eingabefeld auslesen
 
@@ -55,13 +66,13 @@ class MainActivity : ComponentActivity() {
             loginbinding.textUsername.error = "Username angeben"
             if(password.isEmpty()) loginbinding.textPassword.error = "Passwort angeben"
             Toast.makeText(this, "Fehler bei der Anmeldung", Toast.LENGTH_SHORT).show()
-            return
+            callback(null)
         }
 
         if(password.isEmpty()) {
             loginbinding.textPassword.error = "Passwort angeben"
             Toast.makeText(this, "Fehler bei der Anmeldung", Toast.LENGTH_SHORT).show()
-            return
+            callback(null)
         }
 
         val email = "$username@example.com"
@@ -71,8 +82,11 @@ class MainActivity : ComponentActivity() {
                     Toast.makeText(this, "Anmeldung erfolgreich!", Toast.LENGTH_SHORT).show()
                     startActivity(Intent(this, MainActivity::class.java)) //Main UI aufrufen
                     finish() //aktuelle Activity beenden
+                    val uid = auth.currentUser?.uid
+                    callback(uid)
                 } else {
                     Toast.makeText(this, "Anmeldung fehlgeschlagen!", Toast.LENGTH_SHORT).show()
+                    callback(null)
                 }
             }
     }
@@ -113,7 +127,7 @@ class MainActivity : ComponentActivity() {
     }
 
     //Kontakte an die Datenbank schicken
-    private fun senddata(){
+    private fun senddata(uid:String){
         val name = mainbinding.textName.text.toString()
         val nummer = mainbinding.textNummer.text.toString()
 
@@ -130,12 +144,22 @@ class MainActivity : ComponentActivity() {
             return
         }
 
-        val kontaktId = firebaseRefknt.push().key!!
-        val kontakt = Kontakte(kontaktId, name, nummer)
+        if(uid != null){
+            val kontaktId = firebaseRefknt.push().key!!
+            val kontakt = Kontakte(kontaktId, name, nummer)
 
-        firebaseRefknt.child(kontaktId).setValue(kontakt)
-            .addOnCompleteListener {
-                Toast.makeText(this, "Daten hochgeladen", Toast.LENGTH_SHORT).show()
-            }
+            firebaseRefknt.child(uid).child(kontaktId).setValue(kontakt)
+                .addOnCompleteListener {
+                    Toast.makeText(this, "Daten hochgeladen", Toast.LENGTH_SHORT).show()
+                }
+        }else {
+            Toast.makeText(this, "Fehler: Daten nicht hochgeladen", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    // Benutzer automatisch abmelden, wenn die App geschlossen wird
+    override fun onDestroy() {
+        super.onDestroy()
+        auth.signOut()
     }
 }
