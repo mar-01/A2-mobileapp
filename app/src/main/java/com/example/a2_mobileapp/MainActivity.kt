@@ -11,13 +11,11 @@ import com.example.a2_mobileapp.databinding.ActivityLoginBinding
 import com.example.a2_mobileapp.databinding.ActivityMainBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.firestore.FirebaseFirestore
 
 class MainActivity : ComponentActivity() {
 
-    lateinit var mainbinding: ActivityMainBinding //Main UI zum Kontakte Speichern
-    lateinit var loginbinding: ActivityLoginBinding //Login UI
+    lateinit var mainbinding: ActivityMainBinding
+    lateinit var loginbinding: ActivityLoginBinding
     private lateinit var firebaseRefknt: DatabaseReference
     private lateinit var firebaseRefuser: DatabaseReference
     val auth = FirebaseAuth.getInstance()
@@ -38,10 +36,9 @@ class MainActivity : ComponentActivity() {
         val currentUser = auth.currentUser
 
         if (currentUser != null) {
-            // Benutzer ist eingeloggt, zur nächsten Activity weiterleiten
             val intent = Intent(this, TeilnehmerRegistrierungActivity::class.java)
             startActivity(intent)
-            finish() // MainActivity beenden
+            finish()
         }
         setupClickListeners()
     }
@@ -66,13 +63,12 @@ class MainActivity : ComponentActivity() {
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    // Login erfolgreich
-                    // Hier können Sie die nächste Activity starten oder eine Erfolgsmeldung anzeigen
+
                     val intent = Intent(this, TeilnehmerRegistrierungActivity::class.java)
                     startActivity(intent)
                     finish()
                 } else {
-                    // Fehlermeldung anzeigen
+
                     task.exception?.message?.let { showToast(it) }
                 }
             }
@@ -88,11 +84,8 @@ class MainActivity : ComponentActivity() {
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    // Registrierung erfolgreich
-                    // Weiterleitung zur nächsten Seite oder Erfolgsnachricht
                     showToast("Registrierung erfolgreich!")
                 } else {
-                    // Fehlermeldung anzeigen
                     task.exception?.message?.let { showToast(it) }
                 }
             }

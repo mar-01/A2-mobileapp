@@ -45,19 +45,16 @@ class TeilnehmerRegistrierungActivity : AppCompatActivity() {
             logoutUser()
         }
         viewListButton.setOnClickListener {
-            // Intent zur TeilnehmerListeActivity starten
             val intent = Intent(this, TeilnehmerListeActivity::class.java)
             startActivity(intent)
         }
     }
 
     private fun saveUserData() {
-        // Überprüfen, ob alle Eingaben gültig sind
         if (!isInputValid()) {
             return
         }
 
-        // Eingaben sind gültig, Daten speichern
         val name = nameEditText.text.toString()
         val email = emailEditText.text.toString()
         val matrikelnummer = matrikelnummerEditText.text.toString()
@@ -67,7 +64,6 @@ class TeilnehmerRegistrierungActivity : AppCompatActivity() {
             "matrikelnummer" to matrikelnummer
         )
 
-        // Daten in Firestore speichern
         db.collection("teilnehmer").add(user)
             .addOnSuccessListener {
                 showToast("Daten erfolgreich gespeichert")
@@ -78,12 +74,11 @@ class TeilnehmerRegistrierungActivity : AppCompatActivity() {
             }
     }
     private fun logoutUser() {
-        auth.signOut() // Benutzer abmelden
+        auth.signOut()
 
-        // Nach der Abmeldung zur Anmeldeseite (MainActivity) zurückkehren
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
-        finish() // TeilnehmerRegistrierungActivity beenden
+        finish()
     }
 
     private fun showToast(message: String) {
@@ -108,25 +103,21 @@ class TeilnehmerRegistrierungActivity : AppCompatActivity() {
             return false
         }
 
-        // E-Mail-Überprüfung
         if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             showToast("Bitte geben Sie eine gültige E-Mail-Adresse ein.")
             return false
         }
 
-        // Name-Überprüfung
         if (!name.all { it.isLetter() || it.isWhitespace() }) {
             showToast("Bitte geben Sie einen gültigen Namen ein (nur Buchstaben).")
             return false
         }
 
-        // Matrikelnummer-Überprüfung
         if (!matrikelnummer.all { it.isDigit() }) {
             showToast("Bitte geben Sie eine gültige Matrikelnummer ein (nur Zahlen).")
             return false
         }
 
-        // Alle Eingaben sind gültig
         return true
     }
 

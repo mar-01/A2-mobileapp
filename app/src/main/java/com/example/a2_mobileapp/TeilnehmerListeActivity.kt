@@ -27,18 +27,16 @@ class TeilnehmerListeActivity : AppCompatActivity() {
         backToEntryButton.setOnClickListener {
             val intent = Intent(this, TeilnehmerRegistrierungActivity::class.java)
             startActivity(intent)
-            finish() // Schließt die aktuelle Activity
+            finish()
         }
 
         db = FirebaseFirestore.getInstance()
         teilnehmerRecyclerView = findViewById(R.id.teilnehmerRecyclerView)
         adapter = TeilnehmerAdapter(teilnehmerList)
 
-        // RecyclerView-Setup
         teilnehmerRecyclerView.layoutManager = LinearLayoutManager(this)
         teilnehmerRecyclerView.adapter = adapter
 
-        // Echtzeit-Listener starten
         listenToTeilnehmerUpdates()
     }
 

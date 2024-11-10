@@ -40,7 +40,7 @@ class TeilnehmerAdapter(private val teilnehmerList: MutableList<Teilnehmer>) :
     }
 
     fun addTeilnehmer(teilnehmer: Teilnehmer) {
-        teilnehmerList.add(0, teilnehmer) // Neuer Eintrag wird an Position 0 hinzugefügt
-        notifyItemInserted(0) // Benachrichtigen, dass an Position 0 ein neues Element eingefügt wurde
+        teilnehmerList.add(0, teilnehmer)
+        notifyItemInserted(0)
     }
 }
