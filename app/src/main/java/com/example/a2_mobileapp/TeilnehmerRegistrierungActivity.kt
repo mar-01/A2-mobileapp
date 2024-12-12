@@ -1,4 +1,5 @@
 package com.example.a2_mobileapp
+
 import android.content.Intent
 import android.os.Bundle
 import android.util.Patterns
@@ -9,16 +10,16 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
-class TeilnehmerRegistrierungActivity : AppCompatActivity() {
+public class TeilnehmerRegistrierungActivity : AppCompatActivity() {
 
-    private lateinit var nameEditText: EditText
-    private lateinit var emailEditText: EditText
-    private lateinit var matrikelnummerEditText: EditText
-    private lateinit var submitButton: Button
-    private lateinit var logoutButton: Button
-    private lateinit var viewListButton: Button
-    private val db = FirebaseFirestore.getInstance()
-    private val auth = FirebaseAuth.getInstance()
+    public lateinit var nameEditText: EditText
+    public lateinit var emailEditText: EditText
+    public lateinit var matrikelnummerEditText: EditText
+    public lateinit var submitButton: Button
+    public lateinit var logoutButton: Button
+    public lateinit var viewListButton: Button
+    public var db = FirebaseFirestore.getInstance()
+    public var auth = FirebaseAuth.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,7 +38,7 @@ class TeilnehmerRegistrierungActivity : AppCompatActivity() {
         }
     }
 
-    private fun setupClickListeners() {
+    public fun setupClickListeners() {
         submitButton.setOnClickListener {
             saveUserData()
         }
@@ -50,7 +51,7 @@ class TeilnehmerRegistrierungActivity : AppCompatActivity() {
         }
     }
 
-    private fun saveUserData() {
+    public fun saveUserData() {
         if (!isInputValid()) {
             return
         }
@@ -73,7 +74,8 @@ class TeilnehmerRegistrierungActivity : AppCompatActivity() {
                 showToast("Fehler: ${e.message}")
             }
     }
-    private fun logoutUser() {
+
+    public fun logoutUser() {
         auth.signOut()
 
         val intent = Intent(this, MainActivity::class.java)
@@ -81,11 +83,11 @@ class TeilnehmerRegistrierungActivity : AppCompatActivity() {
         finish()
     }
 
-    private fun showToast(message: String) {
+    public fun showToast(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 
-    private fun isInputValid(): Boolean {
+    public fun isInputValid(): Boolean {
         val email = emailEditText.text.toString()
         val name = nameEditText.text.toString()
         val matrikelnummer = matrikelnummerEditText.text.toString()
@@ -121,10 +123,9 @@ class TeilnehmerRegistrierungActivity : AppCompatActivity() {
         return true
     }
 
-    private fun clearFields() {
+    public fun clearFields() {
         nameEditText.text.clear()
         emailEditText.text.clear()
         matrikelnummerEditText.text.clear()
     }
-
 }
