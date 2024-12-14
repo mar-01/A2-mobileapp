@@ -56,7 +56,7 @@ class MainActivity : ComponentActivity() {
     private fun loginUser() {
         val email = emailEditText.text.toString()
         val password = passwordEditText.text.toString()
-        if (!isValidEmail(email)) {
+        if (!email.isValidEmail()) {
             showToast("Bitte geben Sie eine gültige E-Mail-Adresse ein.")
             return
         }
@@ -77,7 +77,7 @@ class MainActivity : ComponentActivity() {
     private fun registerUser() {
         val email = emailEditText.text.toString()
         val password = passwordEditText.text.toString()
-        if (!isValidEmail(email)) {
+        if (!email.isValidEmail()) {
             showToast("Bitte geben Sie eine gültige E-Mail-Adresse ein.")
             return
         }
@@ -95,9 +95,7 @@ class MainActivity : ComponentActivity() {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 
-    public fun isValidEmail(email: String): Boolean {
-        return Patterns.EMAIL_ADDRESS.matcher(email).matches()
-    }
+
 
 
 }

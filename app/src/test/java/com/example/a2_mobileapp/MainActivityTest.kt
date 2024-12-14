@@ -1,22 +1,14 @@
 package com.example.a2_mobileapp
 
-import org.junit.Assert.*
 
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
 class MainActivityTest {
-
-    private lateinit var mainActivity: MainActivity
-
-    @Before
-    fun setUp() {
-        mainActivity = MainActivity()
-    }
 
     @Test
     fun isValidEmail() {
         val validEmail = "test@example.com"
-        assert(mainActivity.isValidEmail(validEmail))
+        assert(validEmail.isValidEmail())
     }
 }
