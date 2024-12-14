@@ -3,10 +3,10 @@ name: MobSysCloud CI/CD
 on:
   push:
     branches:
-      - master
+      - main
   pull_request:
     branches:
-      - master
+      - main
 
 jobs:
   build:
@@ -26,9 +26,12 @@ jobs:
 
       # 3. Set up Android SDK
       - name: Set up Android SDK
-        uses: android-actions/setup-android@v1
+        uses: android-build-action/setup-android@v1
         with:
-          sdk-version: '34'
+          api-level: '34'
+        env:
+          ANDROID_HOME: /home/runner/android
+          ANDROID_SDK_ROOT: /home/runner/android
 
       # 4. Install Gradle dependencies
       - name: Install dependencies
