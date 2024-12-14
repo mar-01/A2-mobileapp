@@ -17,7 +17,7 @@ class TeilnehmerListeActivity : AppCompatActivity() {
     private lateinit var teilnehmerRecyclerView: RecyclerView
     private lateinit var adapter: TeilnehmerAdapter
     private var listenerRegistration: ListenerRegistration? = null
-    private val teilnehmerList = mutableListOf<Teilnehmer>() //Liste
+    private val teilnehmerList = mutableListOf<Teilnehmer>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
