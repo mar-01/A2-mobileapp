@@ -26,9 +26,12 @@ jobs:
 
       # 3. Set up Android SDK
       - name: Set up Android SDK
-        uses: malfist/setup-android@v1
+        uses: android-build-action/setup-android@v1
         with:
-          sdk-version: '34'
+          api-level: '34'
+        env:
+          ANDROID_HOME: /home/runner/android
+          ANDROID_SDK_ROOT: /home/runner/android
 
       # 4. Install Gradle dependencies
       - name: Install dependencies
@@ -87,4 +90,3 @@ jobs:
       # 5. Deploy Firestore rules and Cloud Functions
       - name: Deploy Firestore and Functions
         run: firebase deploy --only firestore,functions
-
