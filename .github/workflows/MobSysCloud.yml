@@ -29,9 +29,14 @@ jobs:
         uses: android-build-action/setup-android@v1
         with:
           api-level: '34'
-        env:
-          ANDROID_HOME: /home/runner/android
-          ANDROID_SDK_ROOT: /home/runner/android
+
+      - name: Set environment variables for Android SDK
+        run: |
+          echo "ANDROID_HOME=/home/runner/android" >> $GITHUB_ENV
+          echo "ANDROID_SDK_ROOT=/home/runner/android" >> $GITHUB_ENV
+          echo "/home/runner/android/tools/bin" >> $GITHUB_PATH
+          echo "/home/runner/android/platform-tools" >> $GITHUB_PATH
+
 
       # 4. Install Gradle dependencies
       - name: Install dependencies
