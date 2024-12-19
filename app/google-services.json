@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "442685613853",
+    "project_id": "mobsysclouda2",
+    "storage_bucket": "mobsysclouda2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:442685613853:android:59fd1fc4c7a6ce8f8823f4",
+        "android_client_info": {
+          "package_name": "com.example.a2_mobileapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC0ms335Wp9FuNr-NAcfvrM8q7lTBp1F74"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
