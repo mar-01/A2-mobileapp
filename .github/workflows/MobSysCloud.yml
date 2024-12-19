@@ -1,4 +1,4 @@
-name: MobSysCloud CI/CD
+name: MobSysCloud CI/CD 
 
 on:
   push:
